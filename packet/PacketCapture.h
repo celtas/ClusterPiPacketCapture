@@ -19,7 +19,7 @@
 
 
 #define PROMSCS_MODE  1
-#define RCV_TIMEOUT   100
+#define RCV_TIMEOUT   1000
 #define DPCP_NOLIMIT_LOOP  -1
 
 /* default snap length (maximum bytes per packet to capture) */

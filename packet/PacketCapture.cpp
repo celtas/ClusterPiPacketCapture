@@ -4,6 +4,8 @@
 
 #include "PacketCapture.h"
 #include <iostream>
+#include "PortAPI.h"
+#include "../mysql/DatabaseManager.h"
 
 using namespace std;
 
@@ -19,7 +21,10 @@ PacketCapture::PacketCapture() {
         exit(1);
     }
 
-    cout << "ディバイス: " << dev << "\n" << endl;
+    cout << "ディバイス " << dev << " を読み込みました." << endl;
+
+    //MysqlManagerの起動
+    DatabaseManager *manager = new DatabaseManager();
 
     handle = pcap_open_live(dev, SNAP_LEN, PROMSCS_MODE, RCV_TIMEOUT, ebuf);
     if (handle == NULL) {
@@ -35,7 +40,7 @@ PacketCapture::PacketCapture() {
     //pcap_close(handle);
 }
 
-void PacketCapture::start_pktfunc( u_char *user,                  // pcap_loop関数の第4引数
+void PacketCapture::start_pktfunc( u_char *user,       // pcap_loop関数の第4引数
                     const struct pcap_pkthdr *header , // 受信したPacketの補足情報
                     const u_char *packet               // 受信したpacketへのポインタ
 ){
@@ -52,12 +57,12 @@ void PacketCapture::start_pktfunc( u_char *user,                  // pcap_loop�
     ip = (struct sniff_ip*)(packet + SIZE_ETHERNET);
     size_ip = IP_HL(ip)*4;
     if (size_ip < 20) {
-        printf("* 不正なIPヘッダ長: %u bytes\n", size_ip);
+        //printf("* 不正なIPヘッダ長: %u bytes\n", size_ip);
     }
     tcp = (struct sniff_tcp*)(packet + SIZE_ETHERNET + size_ip);
     size_tcp = TH_OFF(tcp)*4;
     if (size_tcp < 20) {
-        printf("* 不正なTCPヘッダ長: %u bytes\n", size_tcp);
+        //printf("* 不正なTCPヘッダ長: %u bytes\n", size_tcp);
     }
     //ヘッダ部分を覗いたデータ本体
     payload = (u_char *)(packet + SIZE_ETHERNET + size_ip + size_tcp);
@@ -65,13 +70,22 @@ void PacketCapture::start_pktfunc( u_char *user,                  // pcap_loop�
     char src[32],dst[32];
     memcpy(src,inet_ntoa(ip->ip_src),32);
     memcpy(dst,inet_ntoa(ip->ip_dst),32);
-    printf("-------IPヘッダー-------\n");
-    printf("From : %s\n",src);
-    printf("To   : %s\n",dst);
-    printf("-------TCPヘッダー-------\n");
-    printf("送信元ポート: %d\n",tcp->th_dport);
-    //printf("送信先ポート: %d\n",tcp->th_sport);
-    printf("シーケンス番号: %d\n",tcp->th_seq);
-    printf("確認応答番号: %d\n",tcp->th_ack);
-    printf("---------------------\n\n");
+    string dport = PortAPI::getService(tcp->th_dport);
+    string sport = PortAPI::getService(tcp->th_sport);
+    //if(dport != "none" || sport != "none") {
+    string ssrc = src;
+    string ddst = dst;
+
+//    printf("-------IPヘッダー-------\n");
+//    printf("From : %s\n", src);
+//    printf("To   : %s\n", dst);
+//    printf("-------TCPヘッダー-------\n");
+//
+//    printf("送信元ポート: %s\n", &dport);
+//    printf("送信先ポート: %s\n", &sport);
+
+    //printf("送信先ポート: %s\n",PortAPI::getService(tcp->th_sport));
+    //printf("シーケンス番号: %d\n",tcp->th_seq);
+    //printf("確認応答番号: %d\n",tcp->th_ack);
+//    printf("---------------------\n\n");
 }

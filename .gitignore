@@ -4,5 +4,6 @@
 .LSOverride
 Icon
 .idea/
+.secret
 
 
