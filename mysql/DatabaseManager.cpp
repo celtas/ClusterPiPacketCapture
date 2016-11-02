@@ -15,11 +15,20 @@ using namespace sql::mysql;
 
 DatabaseManager::DatabaseManager() {
     //const std::string hostname, const std::string dbName, const std::string user,const std::string passwd
-    ifstream *ifs = new ifstream(".secret");
+    string fname = ".secret";
+    ifstream *ifs = new ifstream(fname);
     string str;
     if (ifs->fail()) {
-        cerr << ".secretファイルの読み込み失敗" << endl;
-        return;
+        cerr << "設定ファイルの読み込み失敗" << endl;
+        //設定ファイル書き込み
+        std::ofstream ofs;
+        ofs.open(fname, std::ios::app);
+        ofs << "hostname:localhost" << endl;
+        ofs << "database:" << endl;
+        ofs << "port:3306" << endl;
+        ofs << "user:raspberry" << endl;
+        ofs << "passwd:raspberry" << endl;
+        ifs = new ifstream(fname);
     }
     while (getline(*ifs, str)) {
         string value = str.substr(str.find(':') + 1);
