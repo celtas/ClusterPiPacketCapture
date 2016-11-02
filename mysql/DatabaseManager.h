@@ -9,6 +9,8 @@
 #include <cppconn/driver.h>
 #include <mysql_driver.h>
 #include <cppconn/resultset.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 using namespace std;
 using namespace sql;
@@ -29,6 +31,7 @@ public:
     virtual ~DatabaseManager();
 
     PreparedStatement* getPreparedStatement(const SQLString &sql);
+    void insertPacket(in_addr_t ip, char string[20],int sport,int dport);
 };
 
 

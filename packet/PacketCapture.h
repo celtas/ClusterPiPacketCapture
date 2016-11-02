@@ -46,10 +46,10 @@ struct sniff_ip {
     u_short ip_len;		/* パケット長 */
     u_short ip_id;		/* 識別子 */
     u_short ip_off;		/* フラグメントオフセット */
-    #define IP_RF 0x8000		/* 未使用フラグ（必ず0が立つ） */
-    #define IP_DF 0x4000		/* 分割禁止フラグ */
-    #define IP_MF 0x2000		/* more fragments フラグ */
-    #define IP_OFFMASK 0x1fff	/* フラグメントビットマスク */
+#define IP_RF 0x8000		/* 未使用フラグ（必ず0が立つ） */
+#define IP_DF 0x4000		/* 分割禁止フラグ */
+#define IP_MF 0x2000		/* more fragments フラグ */
+#define IP_OFFMASK 0x1fff	/* フラグメントビットマスク */
     u_char ip_ttl;		/* 生存時間（TTL） */
     u_char ip_p;		/* プロトコル */
     u_short ip_sum;		/* チェックサム */
@@ -63,17 +63,17 @@ struct sniff_tcp {
     tcp_seq th_seq;		/* シーケンス番号 */
     tcp_seq th_ack;		/* 確認応答番号 */
     u_char th_offx2;	/* データオフセット、予約ビット */
-    #define TH_OFF(th)	(((th)->th_offx2 & 0xf0) >> 4)
+#define TH_OFF(th)	(((th)->th_offx2 & 0xf0) >> 4)
     u_char th_flags;
-    #define TH_FIN 0x01
-    #define TH_SYN 0x02
-    #define TH_RST 0x04
-    #define TH_PUSH 0x08
-    #define TH_ACK 0x10
-    #define TH_URG 0x20
-    #define TH_ECE 0x40
-    #define TH_CWR 0x80
-    #define TH_FLAGS (TH_FIN|TH_SYN|TH_RST|TH_ACK|TH_URG|TH_ECE|TH_CWR)
+#define TH_FIN 0x01
+#define TH_SYN 0x02
+#define TH_RST 0x04
+#define TH_PUSH 0x08
+#define TH_ACK 0x10
+#define TH_URG 0x20
+#define TH_ECE 0x40
+#define TH_CWR 0x80
+#define TH_FLAGS (TH_FIN|TH_SYN|TH_RST|TH_ACK|TH_URG|TH_ECE|TH_CWR)
     u_short th_win;		/* ウインドサイズ */
     u_short th_sum;		/* チェックサム */
     u_short th_urp;		/* 緊急ポインタ */

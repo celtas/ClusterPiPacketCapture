@@ -7,6 +7,7 @@
 #include "PortAPI.h"
 #include "../mysql/DatabaseManager.h"
 
+DatabaseManager *manager;
 using namespace std;
 
 PacketCapture::PacketCapture() {
@@ -24,7 +25,7 @@ PacketCapture::PacketCapture() {
     cout << "ディバイス " << dev << " を読み込みました." << endl;
 
     //MysqlManagerの起動
-    DatabaseManager *manager = new DatabaseManager();
+    manager = new DatabaseManager();
 
     handle = pcap_open_live(dev, SNAP_LEN, PROMSCS_MODE, RCV_TIMEOUT, ebuf);
     if (handle == NULL) {
@@ -75,6 +76,16 @@ void PacketCapture::start_pktfunc( u_char *user,       // pcap_loop関数の第4
     //if(dport != "none" || sport != "none") {
     string ssrc = src;
     string ddst = dst;
+
+    //ローカルマシンの日付取得
+    time_t timer;
+    struct tm* tm;
+    char datetime[20];
+    timer = time(NULL);
+    tm = localtime(&timer);
+    strftime(datetime, 20, "%Y-%m-%d %H:%M:%S",tm );
+
+    manager->insertPacket(ip->ip_src.s_addr,datetime,tcp->th_sport,tcp->th_dport);
 
 //    printf("-------IPヘッダー-------\n");
 //    printf("From : %s\n", src);
