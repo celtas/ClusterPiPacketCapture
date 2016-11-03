@@ -5,9 +5,9 @@
 #include "PacketCapture.h"
 #include <iostream>
 #include "PortAPI.h"
-#include "../mysql/DatabaseManager.h"
+#include "../mysql/MysqlManager.h"
 
-DatabaseManager *manager;
+MysqlManager *manager;
 using namespace std;
 
 PacketCapture::PacketCapture() {
@@ -25,7 +25,7 @@ PacketCapture::PacketCapture() {
     cout << "ディバイス " << dev << " を読み込みました." << endl;
 
     //MysqlManagerの起動
-    manager = new DatabaseManager();
+    manager = new MysqlManager();
 
     handle = pcap_open_live(dev, SNAP_LEN, PROMSCS_MODE, RCV_TIMEOUT, ebuf);
     if (handle == NULL) {
@@ -39,6 +39,7 @@ PacketCapture::PacketCapture() {
 
     //クローズ
     //pcap_close(handle);
+    //MysqlManager::closeDatabase();
 }
 
 void PacketCapture::start_pktfunc( u_char *user,       // pcap_loop関数の第4引数

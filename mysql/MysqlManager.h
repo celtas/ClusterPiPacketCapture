@@ -11,27 +11,31 @@
 #include <cppconn/resultset.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <jmorecfg.h>
 
 using namespace std;
 using namespace sql;
 
-class DatabaseManager {
+class MysqlManager {
 private:
-    string hostname,database,user,password,port;
+    string hostname,database,tname,user,password,port;
     mysql::MySQL_Driver* driver;
     Connection* conn;
     Statement *stmt;
-    ResultSet *res;
 public:
     void closeDatabase();
-    void connectDatabase();
+    boolean connectDatabase();
     void manageException(SQLException& e);
-    DatabaseManager();
+    MysqlManager();
     //const std::string hostname, const std::string dbName,const std::string user, const std::string passwd
-    virtual ~DatabaseManager();
+    virtual ~MysqlManager();
 
     PreparedStatement* getPreparedStatement(const SQLString &sql);
     void insertPacket(in_addr_t ip, char string[20],int sport,int dport);
+
+    boolean exsistsTable(string tname);
+
+    boolean createTable();
 };
 
 
