@@ -16,19 +16,21 @@
 using namespace std;
 using namespace sql;
 
-class MysqlManager {
+class DatabaseManager {
 private:
-    string hostname,database,tname,user,password,port;
+    string filesystem,hostname,database,tname,user,password,port;
+    const char *sqlite_filename;
+    boolean isMysql;
     mysql::MySQL_Driver* driver;
     Connection* conn;
-    Statement *stmt;
+    Statement* stmt;
 public:
     void closeDatabase();
     boolean connectDatabase();
     void manageException(SQLException& e);
-    MysqlManager();
+    DatabaseManager();
     //const std::string hostname, const std::string dbName,const std::string user, const std::string passwd
-    virtual ~MysqlManager();
+    virtual ~DatabaseManager();
 
     PreparedStatement* getPreparedStatement(const SQLString &sql);
     void insertPacket(in_addr_t ip, char string[20],int sport,int dport);
