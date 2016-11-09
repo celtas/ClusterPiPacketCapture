@@ -34,6 +34,8 @@ DatabaseManager::DatabaseManager() {
         ofs << "passwd:raspberry" << endl;
         ifs = new ifstream(fname);
     }
+    string ofname = "log";
+    ofstream.open(ofname, std::ios::app);
     //ファイル読み込み
     while (getline(*ifs, str)) {
         string value = str.substr(str.find(':') + 1);
@@ -92,7 +94,7 @@ DatabaseManager::~DatabaseManager() {
 /**
  * コネクションを接続します.
  */
-boolean DatabaseManager::connectDatabase() {
+bool DatabaseManager::connectDatabase() {
     cout << "コネクションの確立中..." << endl;
     if (isMysql)
         cout << "MySQLを使用します." << endl;
@@ -108,12 +110,12 @@ boolean DatabaseManager::connectDatabase() {
             stmt = conn->createStatement();
             return true;
         } catch (sql::SQLException &e) {
-            //this->manageException(e);
-            //throw;
+            this->manageException(e);
+            throw;
             return false;
         }
     } else {
-        sqlite
+        //sqlite
         //sqlite3_open(sqlite_filename, &db);
         return true;
     }
@@ -171,6 +173,7 @@ void DatabaseManager::insertPacket(in_addr_t ip, char *date, int sport, int dpor
 //    struct in_addr addr;
 //    inet_aton("255.255.255.255", &addr);
 //    cout << addr.s_addr << endl;
+    ofstream << date << "," << to_string(ip) << "," << to_string(sport)<< "," << to_string(dport) << "," << to_string(false) << endl;
     if (isMysql) {
         PreparedStatement *statment = getPreparedStatement(
                 "INSERT INTO " + tname +
@@ -186,7 +189,7 @@ void DatabaseManager::insertPacket(in_addr_t ip, char *date, int sport, int dpor
     }
 }
 
-boolean DatabaseManager::exsistsTable(string tname) {
+bool DatabaseManager::exsistsTable(string tname) {
     if (isMysql) {
         string query = "SHOW TABLES LIKE '" + tname + "'";
         ResultSet *res = stmt->executeQuery(query);
@@ -200,7 +203,7 @@ boolean DatabaseManager::exsistsTable(string tname) {
     }
 }
 
-boolean DatabaseManager::createTable() {
+bool DatabaseManager::createTable() {
 
     if (isMysql) {
         string query = "CREATE TABLE IF NOT EXISTS " + tname + " (" + "  id int(11) unsigned NOT NULL AUTO_INCREMENT,"

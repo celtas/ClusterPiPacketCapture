@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.0)
 project(CIT_MonoMake)
 
 #For mysql connector include..
@@ -8,7 +8,7 @@ find_package(Boost REQUIRED COMPONENTS regex)
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(SQLiteCpp/include)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -lpcap -lsqlite3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -lpcap")
 
 set(SOURCE_FILES main/Trigger.cpp packet/PacketCapture.cpp packet/PacketCapture.h database/DatabaseManager.cpp database/DatabaseManager.h packet/PortAPI.cpp packet/PortAPI.h)
 add_executable(CIT_MonoMake ${SOURCE_FILES})
