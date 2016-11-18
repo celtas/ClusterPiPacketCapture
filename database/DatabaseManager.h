@@ -12,6 +12,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <fstream>
+#include <cppconn/exception.h>
 
 using namespace std;
 using namespace sql;
@@ -28,7 +29,7 @@ private:
 public:
     void closeDatabase();
     bool connectDatabase();
-    void manageException(SQLException& e);
+    void manageException(SQLException &e);
     DatabaseManager();
     //const std::string hostname,const std::string dbName,const std::string user,const std::string passwd;
     virtual ~DatabaseManager();

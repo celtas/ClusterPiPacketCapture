@@ -16,6 +16,7 @@ PacketCapture::PacketCapture() {
     pcap_t *handle;
 
     dev = pcap_lookupdev(ebuf);
+    dev = "eth0";
     if (dev == NULL) {
         fprintf(stderr, "ディバイスが見つかりませんでした: %s\n", ebuf);
         fprintf(stderr, "もしくは、root権限で実行してください!");

@@ -28,10 +28,10 @@ DatabaseManager::DatabaseManager() {
         ofs << "sqlite_filename:data.db" << endl;
         ofs << "hostname:localhost" << endl;
         ofs << "database:" << endl;
-        ofs << "table:tada" << endl;
+        ofs << "table:data" << endl;
         ofs << "port:3306" << endl;
         ofs << "user:raspberry" << endl;
-        ofs << "passwd:raspberry" << endl;
+        ofs << "password:raspberry" << endl;
         ifs = new ifstream(fname);
     }
     string ofname = "log";
@@ -105,11 +105,13 @@ bool DatabaseManager::connectDatabase() {
     if (isMysql) {
         try {
             driver = get_mysql_driver_instance();
+            cout << "tcp://" + hostname + ":" + port <<" " <<user<<" " << password << endl;
             conn = driver->connect("tcp://" + hostname + ":" + port, user, password);
             conn->setSchema(database);
             stmt = conn->createStatement();
             return true;
         } catch (sql::SQLException &e) {
+            cout << e.what() << endl;
             this->manageException(e);
             throw;
             return false;
@@ -163,7 +165,8 @@ PreparedStatement *DatabaseManager::getPreparedStatement(const sql::SQLString &s
     try {
         return conn->prepareStatement(sql);
     } catch (sql::SQLException &e) {
-        this->manageException(e);
+        cout << e.what() << endl;
+        //this->manageException(e);
         throw;
     }
 }
@@ -173,7 +176,7 @@ void DatabaseManager::insertPacket(in_addr_t ip, char *date, int sport, int dpor
 //    struct in_addr addr;
 //    inet_aton("255.255.255.255", &addr);
 //    cout << addr.s_addr << endl;
-    ofstream << date << "," << to_string(ip) << "," << to_string(sport)<< "," << to_string(dport) << "," << to_string(false) << endl;
+//    ofstream << date << "," << to_string(ip) << "," << to_string(sport)<< "," << to_string(dport) << "," << to_string(false) << endl;
     if (isMysql) {
         PreparedStatement *statment = getPreparedStatement(
                 "INSERT INTO " + tname +
